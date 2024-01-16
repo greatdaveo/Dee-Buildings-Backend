@@ -17,8 +17,8 @@ const register = async (req, res, next) => {
 
     await newUser.save();
     res.status(201).json("User account created successfully");
-  } catch (err) {
-    next(error.message);
+  } catch (error) {
+    next(error);
   }
 };
 
