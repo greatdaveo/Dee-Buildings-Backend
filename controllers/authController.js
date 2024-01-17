@@ -49,5 +49,40 @@ const login = async (req, res, next) => {
   }
 };
 
+const google = async (req, res, next) => {
+  try {
+    const user = await UserModel.findOne({ email: req.body });
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const { password: passwd, ...otherInfo } = user._doc;
+      res
+        .cookie("access_token", token, { httpOnly: true })
+        .status(200)
+        .json(otherInfo);
+    } else {
+      // If user account does not exist
+      const generatedPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+      const newUser = new UserModel({
+        username: req.body.name.split(" ").join("-").toLowerCase(),
+        email: req.body.email,
+        password: hashedPassword,
+        avatar: req.body.photo,
+      });
+
+      await newUser.save();
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const { password: passwd, ...otherInfo } = user._doc;
+      res
+        .cookie("access_token", token, { httpOnly: true })
+        .status(200)
+        .json(otherInfo);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = register;
 module.exports = login;
+module.exports = google;
