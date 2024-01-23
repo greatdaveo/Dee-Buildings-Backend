@@ -1,5 +1,6 @@
 const errorHandler = require("../utils/Error");
 const bcrypt = require("bcryptjs");
+const UserModel = require("../models/UserModel");
 
 const testController = (req, res) => {
   res.json({ message: "Server testing is successful!" });
@@ -11,7 +12,7 @@ const updateUserInfo = async (req, res, next) => {
 
   try {
     if (req.body.password) {
-      req.body.password = bcryptjs.hashSync(req.body.password, 10);
+      req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
 
     const updatedUser = await UserModel.findByIdAndUpdate(
