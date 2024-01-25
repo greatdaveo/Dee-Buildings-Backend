@@ -87,6 +87,14 @@ const google = async (req, res, next) => {
   }
 };
 
-module.exports = register;
-module.exports = login;
-module.exports = google;
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("access_token");
+    res.status(200).json("You have logged out!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { register, login, google, logout };
+
