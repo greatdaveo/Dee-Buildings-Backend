@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 // To import routers
 const userRouter = require("./routes/userRoute");
 const authRouter = require("./routes/authRoute");
+const listingRouter = require("./routes/listingRoute");
 
 // To connect to the Database
 mongoose
@@ -25,6 +26,8 @@ app.use(cookieParser());
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/listing", listingRouter)
+// app.use("/api/listing", listingRouter);
 
 // Middleware For Handling Error
 app.use((err, req, res, next) => {
