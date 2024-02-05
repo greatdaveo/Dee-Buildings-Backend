@@ -1,4 +1,5 @@
 const ListingModel = require("../models/ListingModel");
+const errorHandler = require("../utils/Error");
 
 const listingController = async (req, res, next) => {
   try {
@@ -27,5 +28,28 @@ const deleteListing = async (req, res, next) => {
   }
 };
 
+const updateListing = async (req, res, next) => {
+  const listing = await ListingModel.findById(req.params.id);
+  if (!listing) {
+    return next(errorHandler(401, "Listing not found"));
+  }
+  if (req.user.id !== listing.userRef) {
+    return next(errorHandler(401, "You can only update your own listings!"));
+  }
+
+  try {
+    const updatedListing = await ListingModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.status(200).json(updatedListing);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = listingController;
 module.exports = deleteListing;
+module.exports = updateListing;
+
