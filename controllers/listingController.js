@@ -49,7 +49,20 @@ const updateListing = async (req, res, next) => {
   }
 };
 
+const getListing = async (req, res, next) => {
+  try {
+    const listing = await ListingModel.findById(req.params.id);
+    if (!listing) {
+      return next(errorHandling(404, "Listing not found!"));
+    }
+    res.status(200).json(listing);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = listingController;
 module.exports = deleteListing;
 module.exports = updateListing;
+module.exports = getListing;
 
